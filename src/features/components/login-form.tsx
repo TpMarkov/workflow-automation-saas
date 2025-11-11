@@ -13,6 +13,7 @@ import {Form, FormField, FormLabel, FormControl, FormItem, FormMessage} from "@/
 import {useRouter} from "next/navigation"
 import {Input} from "@/components/ui/input"
 import {authClient} from "@/lib/auth-client";
+import Image from "next/image";
 
 const loginSchema = z.object({
     email: z.email("Please enter a valid email"), // ✅ fixed
@@ -64,16 +65,22 @@ const LoginForm = () => {
                                     className="text-center w-full"
                                     variant="outline"
                                     disabled={isPending}
-                                >
+                                ><Image src={"/logos/google.svg"} alt={"github-logo"}
+                                        width={20} height={20}
+                                />
                                     Continue With Google
+
                                 </Button>
                                 <Button
                                     type="button"
                                     className="text-center w-full flex items-center justify-center gap-2"
                                     variant="outline"
                                     disabled={isPending}
-                                >
+                                > <Image src={"/logos/github.svg"} alt={"github-logo"}
+                                         width={20} height={20}
+                                />
                                     Continue With GitHub
+
                                 </Button>
                             </div>
                             <div className={"grid gap-6"}>
