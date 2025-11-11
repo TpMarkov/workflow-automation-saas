@@ -5,6 +5,8 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {Button} from "@/components/ui/button";
 
 const Page = () => {
+
+
     const trpc = useTRPC();
     const {data} = useQuery(trpc.getWorkflows.queryOptions());
     const queryClient = useQueryClient();
@@ -22,13 +24,12 @@ const Page = () => {
                 Protected page
             </h1>
             {JSON.stringify(data, null, 4)}
-            <Button onClick={() => create.mutate()}>
+            <Button onClick={() => create.mutate()}
+                    disabled={create.isPending}
+            >
                 Create workflow
             </Button>
-            <LogoutButton>
-                Sign out
-            </LogoutButton>
-
+            <LogoutButton/>
         </div>
     )
 }
