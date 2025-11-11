@@ -1,19 +1,19 @@
 "use client"
 import LogoutButton from "@/features/components/logout-button";
 import {useTRPC} from "@/trpc/client";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useMutation} from "@tanstack/react-query";
 import {Button} from "@/components/ui/button";
+
 
 const Page = () => {
     const trpc = useTRPC();
-    const {data} = useQuery(trpc.getWorkflows.queryOptions());
-    const queryClient = useQueryClient();
 
-    const create = useMutation(trpc.createWorkflow.mutationOptions({
-        onSuccess: async () => {
-            queryClient.invalidateQueries(trpc.getWorkflows.queryOptions())
-        }
-    }))
+
+    const generateText = useMutation(
+        trpc.testAI.mutationOptions({
+            onSuccess: () => console.log("AI job is queued"),
+        })
+    );
 
 
     return (
@@ -21,13 +21,10 @@ const Page = () => {
             <h1 className={"text-teal-600 font-bold text-xl"}>
                 Protected page
             </h1>
-            {JSON.stringify(data, null, 4)}
-            <Button onClick={() => create.mutate()}>
-                Create workflow
-            </Button>
-            <LogoutButton>
-                Sign out
-            </LogoutButton>
+            <LogoutButton/>
+            <Button
+                disabled={generateText.isPending}
+                onClick={() => generateText.mutate()}>Generate Text</Button>
 
         </div>
     )
