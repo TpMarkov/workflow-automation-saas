@@ -1,21 +1,19 @@
 "use client"
 import React from 'react'
 import {useForm} from "react-hook-form"
-// import {authClient} from "@/lib/auth-client"
 
 import {z} from "zod"
 import {toast} from 'sonner'
 import Link from "next/link"
-import Image from "next/image"
 import {zodResolver} from "@hookform/resolvers/zod"
 
 import {Button} from "@/components/ui/button"
 import {Card, CardContent, CardHeader, CardDescription, CardFooter, CardTitle} from "@/components/ui/card"
 import {Form, FormDescription, FormField, FormLabel, FormControl, FormItem, FormMessage} from "@/components/ui/form"
 import {useRouter} from "next/navigation" // ✅ fixed import (Next.js 13+)
-import {GithubIcon} from "lucide-react"
 import {Input} from "@/components/ui/input"
 import {authClient} from "@/lib/auth-client";
+import Image from "next/image"
 
 const registerSchema = z.object({
     email: z.email("Please enter a valid email"),
@@ -71,17 +69,22 @@ const RegisterForm = () => {
                                     className="text-center w-full"
                                     variant="outline"
                                     disabled={isPending}
-                                >
+                                > <Image src={"/logos/google.svg"} alt={"google-logo"}
+                                         width={20} height={20}
+                                />
                                     Continue With Google
+
                                 </Button>
                                 <Button
                                     type="button"
                                     className="text-center w-full flex items-center justify-center gap-2"
                                     variant="outline"
                                     disabled={isPending}
-                                >
+                                > <Image src={"/logos/github.svg"} alt={"github-logo"}
+                                         width={20} height={20}
+                                />
                                     Continue With GitHub
-                                    <GithubIcon size={"icon"}/> {/* ✅ fixed size prop */}
+
                                 </Button>
                             </div>
                             <div className={"grid gap-6"}>

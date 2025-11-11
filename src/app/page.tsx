@@ -1,8 +1,6 @@
 import {requireAuth} from "@/lib/require-auth";
-import {Button} from "@/components/ui/button";
 import {caller} from "@/trpc/server";
 import LogoutButton from "@/features/components/logout-button";
-
 
 const Page = async () => {
     await requireAuth()
