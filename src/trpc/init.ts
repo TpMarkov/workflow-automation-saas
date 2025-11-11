@@ -1,6 +1,5 @@
 import {initTRPC} from '@trpc/server';
 import {cache} from 'react';
-import {requireAuth} from "@/lib/require-auth";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {TRPCError} from "@trpc/server";
