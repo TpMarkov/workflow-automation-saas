@@ -12,6 +12,9 @@ const Page = () => {
     const generateText = useMutation(
         trpc.testAI.mutationOptions({
             onSuccess: () => console.log("AI job is queued"),
+            onError: (err) => {
+                console.log("Something went wrong", err.message)
+            }
         })
     );
 
