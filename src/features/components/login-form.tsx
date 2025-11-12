@@ -80,7 +80,6 @@ const LoginForm = () => {
                                          width={20} height={20}
                                 />
                                     Continue With GitHub
-
                                 </Button>
                             </div>
                             <div className={"grid gap-6"}>
