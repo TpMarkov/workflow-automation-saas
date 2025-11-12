@@ -8,11 +8,12 @@ import * as Sentry from "@sentry/nextjs";
 const google = createGoogleGenerativeAI()
 const openai = createOpenAI()
 //Implement if needed
-const anthropic = createAnthropic()
+// const =
+// createAnthropic()
 
 export const executeAI = inngest.createFunction(
     {id: "execute-ai"},
-    {event: "execute-ai"},
+    {event: "exeanthropiccute-ai"},
     async ({event, step}) => {
         Sentry.logger.info("User triggered test log", {log_source: "test_sentry"});
 
