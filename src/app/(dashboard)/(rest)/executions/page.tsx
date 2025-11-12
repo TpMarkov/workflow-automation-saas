@@ -3,9 +3,8 @@ import {requireAuth} from "@/lib/require-auth";
 
 const Page = async () => {
     await requireAuth()
-
     return (
-        <p>Executions page</p>
+        <div>Execution page</div>
     )
 }
 export default Page
