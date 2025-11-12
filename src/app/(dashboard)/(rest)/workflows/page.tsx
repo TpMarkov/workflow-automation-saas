@@ -1,15 +1,21 @@
-import React from 'react'
+import React, {Suspense} from 'react'
 import {requireAuth} from "@/lib/require-auth";
-import {TestButton} from "@/components/test-button";
+import {prefetchWorkflows} from "@/features/workflows/server/prefetch";
+import {HydrateClient} from "@/trpc/server";
+import WorkflowsList from "@/components/workflows-list";
+import {Button} from "@/components/ui/button";
+import {useMutation} from "@tanstack/react-query";
 
 const Page = async () => {
     await requireAuth()
+    prefetchWorkflows()
 
     return (
-        <div className={"flex gap-6 flex-col"}>
-            <h1>Workflow page</h1>
-            <TestButton/>
-        </div>
+        <HydrateClient>
+            <Suspense fallback={<p>Loading...</p>}>
+                <WorkflowsList/>
+            </Suspense>
+        </HydrateClient>
     )
 }
 export default Page
