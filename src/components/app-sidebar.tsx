@@ -3,7 +3,6 @@ import React from 'react'
 import {
     CreditCardIcon,
     FolderOpenIcon,
-    HistoryIcon,
     KeyIcon,
     LogOutIcon,
     StarIcon,
@@ -30,10 +29,10 @@ import {Button} from "@/components/ui/button";
 
 const menuItems = [
     {
-        title: "WorkflowsList",
+        title: "Workflows",
         items: [
             {
-                title: "WorkflowsList",
+                title: "Workflows",
                 icon: FolderOpenIcon,
                 url: "/workflows"
             },
@@ -91,7 +90,7 @@ const AppSidebar = () => {
                                         asChild
                                         tooltip={item.title}
                                         isActive={item.url === "/" ? pathName === "/" : pathName.startsWith(item.url)}
-                                        className={"gap-x-4 h-10 px-4"}>
+                                        className={"gap-x-4 h-10 px-4 m-auto"}>
                                         <Link href={item.url} prefetch>
                                             <item.icon/>
                                             {item.title}
