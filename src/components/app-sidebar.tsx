@@ -30,10 +30,10 @@ import {Button} from "@/components/ui/button";
 
 const menuItems = [
     {
-        title: "Workflows",
+        title: "WorkflowsList",
         items: [
             {
-                title: "Workflows",
+                title: "WorkflowsList",
                 icon: FolderOpenIcon,
                 url: "/workflows"
             },
