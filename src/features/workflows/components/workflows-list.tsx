@@ -1,18 +1,22 @@
 "use client"
 import React from 'react'
 import {useCreateWorkflow, useSuspenseWorkflows} from "@/features/workflows/hooks/use-workflows";
-import {EntityContainer, EntityHeader} from "@/components/entity-components";
+import {EntityContainer, EntityHeader, EntitySearch} from "@/components/entity-components";
 import {useUpgradeModal} from "@/hooks/use-upgrade-modal";
 import {useRouter} from "next/navigation";
+import {placeholder} from "google-logging-utils";
+import {useWorkflowsParams} from "@/features/workflows/hooks/use-workflows-params";
+import {useEntitySearch} from "@/hooks/use-entity-search";
 
 export const WorkflowsList = () => {
     const workflows = useSuspenseWorkflows()
 
     return (
-        <div className={"flex flex-1 justify-center items-center"}>
-            {workflows.data.length === 0 ? <p className={"text-red-500 font-bold text-xl"}>No workflows yet</p> : <pre>
-                {JSON.stringify(workflows.data, null, 2)}
-            </pre>}
+        <div className={"flex justify-center items-center flex-1"}>
+            {workflows.data.items.length === 0 ? <p className={"text-red-500 font-bold text-xl"}>No workflows yet</p> :
+                <pre>
+                    {JSON.stringify(workflows.data, null, 4)}
+                </pre>}
         </div>
     )
 }
@@ -50,9 +54,16 @@ export const WorkflowsContainer = ({children}: { children: React.ReactNode }) =>
     return (
         <EntityContainer
             header={<WorkflowsHeader/>}
-            search={<></>}
+            search={<WorkflowSearch/>}
             pagination={<></>}>
             {children}
         </EntityContainer>
     )
+}
+
+export const WorkflowSearch = () => {
+    const [params, setParams] = useWorkflowsParams()
+    const {searchValue, onSearchChange} = useEntitySearch({params, setParams})
+
+    return <EntitySearch value={searchValue} onChange={onSearchChange} placeholder={"Search Workflows"}/>
 }
