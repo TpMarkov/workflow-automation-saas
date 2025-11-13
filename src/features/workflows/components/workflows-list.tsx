@@ -4,7 +4,6 @@ import {useCreateWorkflow, useSuspenseWorkflows} from "@/features/workflows/hook
 import {EntityContainer, EntityHeader, EntitySearch} from "@/components/entity-components";
 import {useUpgradeModal} from "@/hooks/use-upgrade-modal";
 import {useRouter} from "next/navigation";
-import {placeholder} from "google-logging-utils";
 import {useWorkflowsParams} from "@/features/workflows/hooks/use-workflows-params";
 import {useEntitySearch} from "@/hooks/use-entity-search";
 
