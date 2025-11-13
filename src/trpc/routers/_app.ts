@@ -1,13 +1,9 @@
-import {baseProcedure, createTRPCRouter, premiumProcedure, protectedProcedure} from '../init';
-import {inngest} from "@/inngest/client";
-import {TRPCError} from "@trpc/server";
+import {createTRPCRouter} from '../init';
+import {workflowsRouter} from "@/features/workflows/server/route";
 
 
 export const appRouter = createTRPCRouter({
-        testAI: premiumProcedure.mutation(async () => {
-            // throw new TRPCError({message: "Something went wrong", code: "BAD_REQUEST"})
-            return await inngest.send({name: "execute-ai"});
-        }),
+        workflows: workflowsRouter,
     })
 ;
 // export type definition of API
