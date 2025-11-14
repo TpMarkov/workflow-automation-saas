@@ -4,6 +4,7 @@ import {generateSlug} from "random-word-slugs";
 import {z} from "zod";
 import {PAGINATION} from "@/config/constants";
 
+
 export const workflowsRouter = createTRPCRouter({
     create: premiumProcedure.mutation(async ({ctx}) => {
         return prisma.workflow.create({
@@ -90,3 +91,5 @@ export const workflowsRouter = createTRPCRouter({
         })
     })
 })
+
+

@@ -1,12 +1,22 @@
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import {AlertTriangleIcon, ArrowLeftIcon, ArrowRightIcon, Loader2Icon, PlusIcon, SearchIcon} from "lucide-react";
+import {
+    AlertTriangleIcon,
+    ArrowLeftIcon,
+    ArrowRightIcon,
+    Loader2Icon,
+    PlusIcon,
+    SearchIcon,
+    TrashIcon
+} from "lucide-react";
 import React from "react";
 import {Input} from "@/components/ui/input";
 import {Empty, EmptyHeader, EmptyTitle, EmptyMedia, EmptyDescription, EmptyContent} from "@/components/ui/empty";
 import {PackageOpenIcon} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import {MoreVerticalIcon} from "lucide-react";
 
 type EntityHeaderProps = {
     title: string
@@ -255,6 +265,17 @@ export const EntityItem = ({
                                href,
                                subtitle
                            }: EntityItemProps) => {
+    const handleRemove = async (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+        if (isRemoving) {
+            return
+        }
+        if (onRemove) {
+            await onRemove()
+        }
+    }
+
     return <Link href={href} prefetch>
         <Card
             className={cn("p-4 shadow-none hover:shadow cursor-pointer", isRemoving && "opacity-50 cursor-not-allow")}
@@ -274,6 +295,28 @@ export const EntityItem = ({
                 {(actions || onRemove) && (
                     <div className={"flex gap-x-4 items-center"}>
                         {actions}
+                        {onRemove && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        size="icon"
+                                        variant={"ghost"}
+                                        onClick={(e) => e.stopPropagation()}>
+                                        <MoreVerticalIcon className={"size-4"}/>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    onClick={(e) => e.stopPropagation()}
+                                    align={"end"}
+                                >
+                                    <DropdownMenuItem onClick={handleRemove}>
+                                        <TrashIcon className={"size-4"}/>
+                                        Delete
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
+
                     </div>
                 )}
             </CardContent>
