@@ -1,7 +1,13 @@
 "use client"
 import React from 'react'
 import {useCreateWorkflow, useSuspenseWorkflows} from "@/features/workflows/hooks/use-workflows";
-import {EntityContainer, EntityHeader, EntityPagination, EntitySearch} from "@/components/entity-components";
+import {
+    EmptyView,
+    EntityContainer,
+    EntityHeader, EntityItem, EntityList,
+    EntityPagination,
+    EntitySearch, ErrorView, LoadingView
+} from "@/components/entity-components";
 import {useUpgradeModal} from "@/hooks/use-upgrade-modal";
 import {useRouter} from "next/navigation";
 import {useWorkflowsParams} from "@/features/workflows/hooks/use-workflows-params";
@@ -11,14 +17,15 @@ export const WorkflowsList = () => {
     const workflows = useSuspenseWorkflows()
 
     return (
-        <div className={"flex justify-center items-center flex-1"}>
-            {workflows.data.items.length === 0 ? <p className={"text-red-500 font-bold text-xl"}>No workflows yet</p> :
-                <pre>
-                    {JSON.stringify(workflows.data, null, 4)}
-                </pre>}
-        </div>
+        <EntityList
+            items={workflows.data.items}
+            emptyView={<WorkflowsEmptyView/>}
+            getKey={(workflow) => workflow.id}
+            renderItem={(wf) => <WorkflowItem workflow={wf}/>}
+        />
     )
 }
+
 
 export const WorkflowsHeader = ({disabled}: { disabled?: boolean }) => {
 
@@ -68,7 +75,57 @@ export const WorkflowsPagination = () => {
     }/>
 }
 
-export const WorkflowsContainer = ({children}: { children: React.ReactNode }) => {
+export const WorkflowsLoadingView = () => {
+    return <LoadingView message={"Loading Workflows..."}/>
+}
+
+export const WorkflowsError = () => {
+    return <ErrorView message="Error loading workflows"/>
+}
+
+export const WorkflowsEmptyView = () => {
+    const createWorkflow = useCreateWorkflow()
+    const {handleError, modal} = useUpgradeModal()
+    const router = useRouter()
+
+    const handleCreate = () => {
+        createWorkflow.mutate(undefined, {
+            onError: (error) => handleError(error),
+            onSuccess: (data) => {
+                router.push(`/workflows/${data.id}`)
+            }
+        })
+    }
+
+    return (
+        <>
+            <EmptyView
+                onNew={handleCreate}
+                message={"You haven't created any workflows. Get started by creating your first workflow"}
+            />
+        </>
+    )
+}
+
+export const WorkflowItem = ({workflow}) => {
+    return (
+        <EntityItem
+            subtitle={"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore, repudiandae."}
+            href={`/workflows/${workflow.id}`}
+            title={workflow.name}
+        />
+    )
+}
+
+export const WorkflowsContainer = (
+    {
+        children
+    }
+    :
+    {
+        children: React.ReactNode
+    }
+) => {
     return (
         <EntityContainer
             header={<WorkflowsHeader/>}
@@ -78,3 +135,4 @@ export const WorkflowsContainer = ({children}: { children: React.ReactNode }) =>
         </EntityContainer>
     )
 }
+
