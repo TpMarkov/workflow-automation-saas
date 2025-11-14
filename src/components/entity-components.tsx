@@ -17,6 +17,7 @@ import {cn} from "@/lib/utils";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {MoreVerticalIcon} from "lucide-react";
+import {toast} from "sonner";
 
 type EntityHeaderProps = {
     title: string
@@ -125,14 +126,14 @@ export const EntityPagination = ({page, totalPages, onPageChange, disabled}: Ent
         <div className={"flex-1 text-sm text-muted-foreground"}>
             Page {page} of {totalPages || 1}
         </div>
-        <div className={"[flex items-center justify-end space-x-2 py-4"}>
+        <div className={"flex items-center justify-end space-x-2 py-4"}>
             <Button
                 disabled={page === 1 || disabled}
                 size={"sm"}
                 onClick={() => onPageChange(Math.max(1, page - 1))}
             >
-                Previous
                 <ArrowLeftIcon className={"size-4"}/>
+                Previous
             </Button>
             <Button
                 disabled={page === totalPages || disabled}
@@ -272,13 +273,17 @@ export const EntityItem = ({
             return
         }
         if (onRemove) {
-            await onRemove()
+            try {
+                await onRemove()
+            } catch (error) {
+                toast.error("Failed to remove item")
+            }
         }
     }
 
     return <Link href={href} prefetch>
         <Card
-            className={cn("p-4 shadow-none hover:shadow cursor-pointer", isRemoving && "opacity-50 cursor-not-allow")}
+            className={cn("p-4 shadow-none hover:shadow cursor-pointer", isRemoving && "opacity-50 cursor-not-allowed")}
         >
             <CardContent className={"flex flex-row items-center justify-between p-0"}>
                 <div className={"flex items-center gap-3"}>
