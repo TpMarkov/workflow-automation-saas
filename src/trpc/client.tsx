@@ -10,6 +10,7 @@ import type {AppRouter} from './routers/_app';
 
 export const {TRPCProvider, useTRPC} = createTRPCContext<AppRouter>();
 let browserQueryClient: QueryClient;
+import superjson from "superjson";
 
 function getQueryClient() {
     if (typeof window === 'undefined') {
@@ -47,7 +48,7 @@ export function TRPCReactProvider(
         createTRPCClient<AppRouter>({
             links: [
                 httpBatchLink({
-                    // transformer: superjson, <-- if you use a data transformer
+                    transformer: superjson,
                     url: getUrl(),
                 }),
             ],

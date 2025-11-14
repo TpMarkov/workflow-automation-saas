@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import {useCreateWorkflow, useSuspenseWorkflows} from "@/features/workflows/hooks/use-workflows";
+import {useCreateWorkflow, useRemoveWorkflow, useSuspenseWorkflows} from "@/features/workflows/hooks/use-workflows";
 import {
     EmptyView,
     EntityContainer,
@@ -12,6 +12,11 @@ import {useUpgradeModal} from "@/hooks/use-upgrade-modal";
 import {useRouter} from "next/navigation";
 import {useWorkflowsParams} from "@/features/workflows/hooks/use-workflows-params";
 import {useEntitySearch} from "@/hooks/use-entity-search";
+import {Workflow} from "@/generated/prisma/client";
+import {useTRPC} from "@/trpc/client";
+import {WorkflowIcon} from "lucide-react"
+import {formatDistanceToNow} from "date-fns"
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 
 export const WorkflowsList = () => {
     const workflows = useSuspenseWorkflows()
@@ -21,7 +26,7 @@ export const WorkflowsList = () => {
             items={workflows.data.items}
             emptyView={<WorkflowsEmptyView/>}
             getKey={(workflow) => workflow.id}
-            renderItem={(wf) => <WorkflowItem workflow={wf}/>}
+            renderItem={(workflow) => <WorkflowItem data={workflow}/>}
         />
     )
 }
@@ -107,12 +112,37 @@ export const WorkflowsEmptyView = () => {
     )
 }
 
-export const WorkflowItem = ({workflow}) => {
+interface WorkflowItemProps {
+    data: Workflow
+}
+
+export const WorkflowItem = ({data}: WorkflowItemProps) => {
+    const removeWorkflow = useRemoveWorkflow()
+
+    const handleRemove = () => {
+        removeWorkflow.mutate({id: data.id})
+    }
+
     return (
         <EntityItem
-            subtitle={"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore, repudiandae."}
-            href={`/workflows/${workflow.id}`}
-            title={workflow.name}
+            subtitle={
+                <>
+                    Updated {formatDistanceToNow(data.updatedAt, {
+                    addSuffix: true
+                })}{" "}&bull; Created{" "}{formatDistanceToNow(data.createdAt, {
+                    addSuffix: true
+                })}
+                </>
+            }
+            isRemoving={removeWorkflow.isPending}
+            href={`/workflows/${data.id}`}
+            title={data.name}
+            onRemove={handleRemove}
+            image={
+                <div className={"size-8 flex items-center justify-center"}>
+                    <WorkflowIcon className={"size-5 text-muted-foreground"}/>
+                </div>
+            }
         />
     )
 }
