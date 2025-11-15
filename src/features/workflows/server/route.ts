@@ -4,6 +4,8 @@ import {generateSlug} from "random-word-slugs";
 import {z} from "zod";
 import {PAGINATION} from "@/config/constants";
 import {TRPCError} from "@trpc/server";
+import {NodeType} from "@/generated/prisma/enums";
+import type {Node, Edge} from "@xyflow/react"
 
 
 export const workflowsRouter = createTRPCRouter({
@@ -11,7 +13,14 @@ export const workflowsRouter = createTRPCRouter({
         return prisma.workflow.create({
             data: {
                 name: generateSlug(3),
-                userId: ctx.auth.user.id
+                userId: ctx.auth.user.id,
+                nodes: {
+                    create: {
+                        type: NodeType.INITIAl,
+                        position: {x: 0, y: 0},
+                        name: NodeType.INITIAl
+                    }
+                }
             }
         })
     }), remove: protectedProcedure
@@ -84,18 +93,43 @@ export const workflowsRouter = createTRPCRouter({
     getOne: protectedProcedure.input(z.object({
         id: z.string()
     })).query(async ({ctx, input}) => {
-        const workflow = await prisma.workflow.findUnique({
+        const workflow = await prisma.workflow.findUniqueOrThrow({
             where: {
                 id: input.id,
                 userId: ctx.auth.user.id
+            }, include: {
+                nodes: true, connections: true
             }
         })
+//  Transform server nodes to react-flow compatible nodes
+        const nodes: Node[] = workflow.nodes.map((node) => (
+            {
+                id: node.id,
+                type: node.type,
+                position: node.position as { x: number, y: number },
+                data: (node.data as Record<string, unknown>) || {}
+            }
+        ))
+
+        //  Transform server connections to react-flow compatible edges
+        const edges: Edge[] = workflow.connections.map((connection) => ({
+            id: connection.id,
+            source: connection.fromNodeId,
+            target: connection.toNodeId,
+            sourceHandle: connection.fromOutput,
+            targetHandle: connection.toInput,
+        }))
 
         if (!workflow) {
             throw new TRPCError({code: "NOT_FOUND", message: "Workflow not found!"})
         }
 
-        return workflow
+        return {
+            id: workflow.id,
+            name: workflow.name,
+            edges,
+            nodes,
+        }
     })
 })
 
