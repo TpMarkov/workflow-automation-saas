@@ -18,7 +18,6 @@ export const InitialNode = memo((props: NodeProps) => {
         <WorkflowNode name={"Node"}
                       showToolbar={true}
                       description={"Click to add a Node"}
-
         >
           <PlaceholderNode
               {...props}
