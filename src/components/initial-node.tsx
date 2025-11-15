@@ -7,27 +7,31 @@ import {PlaceholderNode, PlaceholderNodeProps} from "@/components/react-flow/pla
 
 import React from 'react'
 import {WorkflowNode} from "@/components/workflow-node";
+import {NodeSelector} from "@/components/node-selector";
 
 
 export const InitialNode = memo((props: NodeProps) => {
-
+  const [selectorOpen, setSelectorOpen] = useState(false)
 
   return (
-      <WorkflowNode name={"Node"}
-                    showToolbar={true}
-                    description={"Click to add a Node"}
+      <NodeSelector open={selectorOpen} onOpenChange={setSelectorOpen}>
+        <WorkflowNode name={"Node"}
+                      showToolbar={true}
+                      description={"Click to add a Node"}
 
-      >
-        <PlaceholderNode
-            {...props}
-            onClick={() => {
-            }}
         >
-          <div className={"cursor-pointer flex items-center justify-center"}>
-            <PlusIcon className={"size-4"}/>
-          </div>
-        </PlaceholderNode>
-      </WorkflowNode>
+          <PlaceholderNode
+              {...props}
+              onClick={() => {
+                setSelectorOpen(true)
+              }}
+          >
+            <div className={"cursor-pointer flex items-center justify-center"}>
+              <PlusIcon className={"size-4"}/>
+            </div>
+          </PlaceholderNode>
+        </WorkflowNode>
+      </NodeSelector>
   )
 })
 
