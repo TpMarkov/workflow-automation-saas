@@ -64,7 +64,6 @@ export const Editor = ({id}: Props) => {
             </Panel>
           </ReactFlow>
         </ReactFlowProvider>
-
       </div>
   )
 };
